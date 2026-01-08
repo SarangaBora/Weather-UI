@@ -39,6 +39,15 @@ type DisplayProps={
   }
 }
 
+// type DailyDataUI={
+//     time: Date[];
+//     sunrise: Date[];    
+//     sunset: Date[];
+//     temperature_2m_max: number[]|Float32Array|null;
+//     temperature_2m_min: number[]|Float32Array|null;
+//     precipitation_probability_max: number[]|Float32Array|null;
+// }
+
 
 //type for currentweather data
 type currentWeatherUI={
@@ -67,7 +76,7 @@ type currentWeatherUI={
 //conditional tabing -- done
 //component or conditional content render ---done
 //decide whether to show current weather as complete different component or part of display component--decided
-//dividing the data obtained and send as props to respective components--
+//dividing the data obtained and send as props to respective components--done
 
 
 function Display({ weatherData, locData }: DisplayProps) {
@@ -94,12 +103,20 @@ function Display({ weatherData, locData }: DisplayProps) {
         precipitation_probability: weatherData.hourly.precipitation_probability
     }
 
+    const dailyData:DisplayProps["weatherData"]["daily"]={
+        time: weatherData.daily.time,
+        sunrise: weatherData.daily.sunrise,
+        sunset: weatherData.daily.sunset,   
+        temperature_2m_max: weatherData.daily.temperature_2m_max,
+        temperature_2m_min: weatherData.daily.temperature_2m_min,
+        precipitation_probability_max: weatherData.daily.precipitation_probability_max
+    }
+
 
     return (
-        <div>
-            <h2>Data retrieve</h2>
+        <div className="display-data">
 
-            <div className="current-display">{weatherData&& locData && <CurrentDisplay currentWeather={currentWeather}  />}</div>
+            {weatherData&& locData && <CurrentDisplay currentWeather={currentWeather}  />}
 
             <div className="display-tabs">
                 <button onClick={()=>setActiveTab("hourly")}>Hourly</button>
@@ -114,7 +131,7 @@ function Display({ weatherData, locData }: DisplayProps) {
                 )
                 :(
                     <div className="content-daily">
-                        <DailyDisplay />
+                        <DailyDisplay dailyData={dailyData} />
                     </div>
                 )
                 }
